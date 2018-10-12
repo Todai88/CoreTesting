@@ -1,94 +1,23 @@
 version: '3'
 
 services:
+  main-web:
+    image: testcore
+    build:
+      context: ./Testcore
+      dockerfile: dockerfile
+    ports:
+      - "8080:80"
+    container_name: testcore
 
     ####
-    ##  MicroServices
+    ##
+    ## Ecosystem
+    ##
     ####
 
-    ## Name of the image we are using
-    webmvc:
-      image: web
-      build:
-        ## Where does the container exist in relation to the current path
-        context: ./web
-        dockerfile: Dockerfile.debug ## Holds the __actual__ configurations on the container.
-      ports:
-      ## What port will be used on the host system : what port is used on the container (see dockerfile)
-        - "8080:80"
-      volumes:
-        - ./web/bin/pub/:/app ## Can specify a particular volume ON the container, or a volume on the host that the container can use (like in this case).
-      container_name: web ## A container is different than an image. A container is a snapshot of a running image, whereas the image are the predefined 
-                          ## layers of a container. 
-      depends_on: ## Specifies what other services are required by this service. Thereby setting up the boot-hierarchy (or whatever you call it)
-        - applicants.api
-        - identity.api
-        - jobs.api
-
-  applicants.api:
-    image: applicants.api
-    environment:
-      - ConnectionString=Server=sql.data;User=sa;Password=Pass@word;Database=TestCore.applicants;
-    build: 
-      context: ./services/applicants.api
-      dockerfile: Dockerfile.debug 
-    ports:
-      - "8081:80"
-    volumes:
-      - ./services/applicants.api/bin/pub/:app 
-    container_name: applicants.api 
-    depends_on:
-      - sql.data
-      - rabbitmq
-
-  identity.api:
-    image: identity.api
-    environment:
-      - RedisHost=user.data:6379
-    build:
-      context: ./services/identity.api
-      dockerfile: Dockerfile.debug 
-    ports:
-      - "8084:80"
-    volumes:
-      - ./services/identity.api/bin/pub/:/app
-    container_name: identity.api
-    depends_on:
-      - user.data 
-
-  jobs.api:
-    image: jobs.api
-    environment:
-      - ConnectionString=Server=sql.data;User=sa;Password=Pass@word;Database=TestCore.jobs;
-    build:
-      context: ./services/jobs.api
-      dockerfile: Dockerfile.debug
-    ports: 
-    - "8083:80"
-    volumes: 
-      - ./services/jobs.api/bin/pub/:/app
-    container_name: jobs.api   
-    depends_on:
-      - sql.data
-      - rabbitmq
-
-  ####
-  ##  Ecosystem / tools
-  ####
-  sql.data:
-    image: mssql-linux
-    build:
-      context: ./Database
-      dockerfile: Dockerfile
-    ports:
-      - "5433:1433"
-    container_name: mssql-linux
-
-  user.data:
-    image: redis
-  
   rabbitmq:
-    image: rabbitmq:3-managment
+    image: rabbitmq:3.6-management
     ports:
       - "15672:15672"
     container_name: rabbitmq
