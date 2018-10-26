@@ -56,3 +56,17 @@ public async Task Consume(ConsumeContext<ApplicantAppliedEvent> context)
 Basically what you need to do is inherit from `IConsumer` and implement its functions. 
 
 ### Redis: (tba)
+
+### Azure Container Registry
+
+You can use keys and values from Azure's container registry (access keys) to while working with your registry with the Docker CLI. 
+
+![Azure Container Registry - Access Keys](https://docs.microsoft.com/en-us/azure/container-registry/media/container-registry-get-started-portal/qs-portal-06.png)
+
+To use it, you need to use `docker login` to log in to the service as such:
+```
+    docker login --username <username> --password <password> <login server>
+```
+
+The command returns Login Succeeded once completed. You might also see a security warning recommending the use of the --password-stdin parameter. While its use is outside the scope of this article, we recommend following this best practice. See the [docker login](https://docs.docker.com/engine/reference/commandline/login/) command reference for more information.
+
