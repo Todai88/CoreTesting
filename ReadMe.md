@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/joabaj88/Test-Core-Docker-Pipeline/_apis/build/status/Todai88.CoreTesting)](https://dev.azure.com/joabaj88/Test-Core-Docker-Pipeline/_build/latest?definitionId=1)
+
 This repo follows the structure outlined in [this blog post](https://fullstackmark.com/post/12/get-started-building-microservices-with-asp.net-core-and-docker-in-visual-studio-code), but is also heavily influenced by my experiences with microservice architecture and the eco system. Have a look at my other repositories for more information.
 
 # Important things to note:
