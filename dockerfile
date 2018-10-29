@@ -18,18 +18,18 @@
 ## ------>>>>
 
 
-FROM microsoft/dotnet:sdk AS build
-WORKDIR /app
+# FROM microsoft/dotnet:sdk AS build
+# WORKDIR /app
 
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY Testcore/*.csproj ./Testcore/
-RUN dotnet restore
+# # copy csproj and restore as distinct layers
+# COPY *.sln .
+# COPY Testcore/*.csproj ./Testcore/
+# RUN dotnet restore
 
-# copy everything else and build app
-COPY Testcore/. ./aspnetapp/
-WORKDIR /app/aspnetapp
-RUN dotnet publish -c Release -o out
+# # copy everything else and build app
+# COPY Testcore/. ./aspnetapp/
+# WORKDIR /app/aspnetapp
+# RUN dotnet publish -c Release -o out
 
 
 FROM microsoft/dotnet:aspnetcore-runtime AS runtime
@@ -37,3 +37,23 @@ WORKDIR /app
 COPY --from=build /app/aspnetapp/out ./
 EXPOSE 80
 ENTRYPOINT ["dotnet", "aspnetapp.dll"]
+
+WORKDIR /app
+EXPOSE 80
+
+FROM microsoft/aspnetcore-build:sdk AS build
+WORKDIR /src
+COPY *.sln ./
+COPY Testcore/*.csproj ./Testcore/
+RUN dotnet restore
+COPY . .
+WORKDIR /src/Testcore
+RUN dotnet build -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish -c Release -o /app
+
+FROM base AS production
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "Testcore.dll"]
