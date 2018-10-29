@@ -16,5 +16,5 @@ steps:
   displayName: "ACR - Docker Login"
 - script: docker build -t $(dockerId)/$(imageName) .
   displayName: "ACR - Docker Build $(imageName)"
-- script: docker push $(dockerId)/$(imageName)
+- script: docker push $(azureDockerRegister)/$(imageName)
   displayName: "ACR - Docker push the built file."
