@@ -41,7 +41,7 @@ ENTRYPOINT ["dotnet", "aspnetapp.dll"]
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:sdk AS build
+FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
 COPY *.sln ./
 COPY Testcore/*.csproj ./Testcore/
