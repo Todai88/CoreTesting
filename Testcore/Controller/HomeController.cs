@@ -10,7 +10,7 @@ namespace Testcore.Controllers
 
         public string Index()
         {
-            return "This is my default action...";
+            return "This is my default action v2...";
         }
 
         // 
