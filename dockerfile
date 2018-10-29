@@ -38,23 +38,21 @@
 # EXPOSE 80
 # ENTRYPOINT ["dotnet", "aspnetapp.dll"]
 
-FROM microsoft/inossidabile/aspnetcore-nodejs-build AS base
-WORKDIR /app
-EXPOSE 80
+# Sample contents of Dockerfile
+# Stage 1
+FROM microsoft/aspnetcore-build AS builder
+WORKDIR /source
 
-FROM microsoft/aspnetcore-build AS build
-WORKDIR /src
-COPY *.sln ./
-COPY Testcore/*.csproj ./Testcore/
+# caches restore result by copying csproj file separately
+COPY Testcore/*.csproj .
 RUN dotnet restore
-COPY . .
-WORKDIR /src/Testcore
-RUN dotnet build -c Release -o /app
 
-FROM build AS publish
-RUN dotnet publish -c Release -o /app
+# copies the rest of your code
+COPY Testcore/. .
+RUN dotnet publish --output /app/ --configuration Release
 
-FROM base AS production
+# Stage 2
+FROM microsoft/aspnetcore
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=builder /app .
 ENTRYPOINT ["dotnet", "Testcore.dll"]
