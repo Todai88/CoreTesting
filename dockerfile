@@ -38,21 +38,30 @@
 # EXPOSE 80
 # ENTRYPOINT ["dotnet", "aspnetapp.dll"]
 
-# Sample contents of Dockerfile
-# Stage 1
-FROM microsoft/aspnetcore-build:2.0 AS builder
-WORKDIR /source
+FROM microsoft/dotnet:2.0-sdk AS build
+WORKDIR /app
 
-# caches restore result by copying csproj file separately
-COPY Testcore/*.csproj .
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY Testcore/*.csproj ./Testcore/ 
+# # TODO: Add test files
+# COPY tests/*.csproj ./tests/ 
 RUN dotnet restore
 
-# copies the rest of your code
-COPY Testcore/. .
-RUN dotnet publish --output /app/ --configuration Release
+# copy and build everything else
+COPY Testcore/. ./Testcore/ 
+# COPY tests/. ./tests/
+RUN dotnet build 
 
-# Stage 2
-FROM microsoft/aspnetcore:2.0
+# COPY Testcore/. ./aspnetapp/
+# WORKDIR /app/aspnetapp
+# RUN dotnet publish -c Release -o out
+
+FROM build AS publish
+WORKDIR /app/Testcore
+RUN dotnet publish -o out
+
+FROM microsoft/dotnet:2.0-runtime AS runtime
 WORKDIR /app
-COPY --from=builder /app .
+COPY --from=publish /app/Testcore/out ./
 ENTRYPOINT ["dotnet", "Testcore.dll"]
