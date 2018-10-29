@@ -70,3 +70,5 @@ To use it, you need to use `docker login` to log in to the service as such:
 
 The command returns Login Succeeded once completed. You might also see a security warning recommending the use of the --password-stdin parameter. While its use is outside the scope of this article, we recommend following this best practice. See the [docker login](https://docs.docker.com/engine/reference/commandline/login/) command reference for more information.
 
+### Docker-compose with ACR readup:
+[docker-compose](https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/docker?view=vsts&tabs=yaml#use-docker-compose)
