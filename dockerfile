@@ -32,16 +32,17 @@
 # RUN dotnet publish -c Release -o out
 
 
-FROM microsoft/dotnet:aspnetcore-runtime AS runtime
-WORKDIR /app
-COPY --from=build /app/aspnetapp/out ./
-EXPOSE 80
-ENTRYPOINT ["dotnet", "aspnetapp.dll"]
+# FROM microsoft/dotnet:aspnetcore-runtime AS runtime
+# WORKDIR /app
+# COPY --from=build /app/aspnetapp/out ./
+# EXPOSE 80
+# ENTRYPOINT ["dotnet", "aspnetapp.dll"]
 
+FROM microsoft/inossidabile/aspnetcore-nodejs-build AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.0 AS build
+FROM microsoft/aspnetcore-build AS build
 WORKDIR /src
 COPY *.sln ./
 COPY Testcore/*.csproj ./Testcore/
